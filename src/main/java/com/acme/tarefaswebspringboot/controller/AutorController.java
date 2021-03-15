@@ -1,6 +1,7 @@
 package com.acme.tarefaswebspringboot.controller;
 
 import com.acme.tarefaswebspringboot.model.Autor;
+import com.acme.tarefaswebspringboot.util.Constants;
 import lombok.val;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -24,14 +25,14 @@ public class AutorController {
 
     @GetMapping
     String index(Model model) {
-        List<Autor> autores = rest.getForObject("http://localhost:8888/autores", List.class);
+        List<Autor> autores = rest.getForObject(Constants.URL_API + "/autores", List.class);
         model.addAttribute("autores", autores);
         return "autores/index";
     }
 
     @GetMapping("/excluir/{id}")
     String delete(@PathVariable Long id) {
-        rest.delete("http://localhost:8888/autores/" + id);
+        rest.delete(Constants.URL_API + "/autores/" + id);
         return "redirect:/autores";
     }
 
@@ -43,7 +44,7 @@ public class AutorController {
 
     @GetMapping("/alterar/{id}")
     String novo(Model model, @PathVariable Long id) {
-        Autor autor = rest.getForObject("http://localhost:8888/autores/" + id, Autor.class);
+        Autor autor = rest.getForObject(Constants.URL_API + "/autores/" + id, Autor.class);
         model.addAttribute("autor", autor);
         return "autores/form";
     }
@@ -56,10 +57,10 @@ public class AutorController {
         else {
             val request = new HttpEntity<>(autor);
             if (autor.getId() == null) {
-                rest.postForObject("http://localhost:8888/autores", request, Autor.class);
+                rest.postForObject(Constants.URL_API + "/autores", request, Autor.class);
             }
             else {
-                rest.put("http://localhost:8888/autores/" + autor.getId(), request, Autor.class);
+                rest.put(Constants.URL_API + "/autores/" + autor.getId(), request, Autor.class);
             }
             return "redirect:/autores";
         }
